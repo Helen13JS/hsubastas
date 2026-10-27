@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es-BO">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#122e29" />
+    <meta name="description" content="Publica tus requerimientos en HSubastas, el marketplace de subastas inversas en Bolivia. Compara ofertas a la baja y conecta con compradores y proveedores." />
+    <title>HSubastas - Marketplace de Subastas Inversas en Bolivia</title>
+    <!-- Google Analytics 4: definir VITE_GA_MEASUREMENT_ID=G-... en .env y recompilar.
+         Sin un ID real configurado no se carga Google Analytics. -->
+    <script type="module">
+      const measurementId = (import.meta.env.VITE_GA_MEASUREMENT_ID || '').trim();
+      if (/^G-[A-Z0-9]+$/.test(measurementId) && !measurementId.includes('XXXX')) {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        window.gtag('js', new Date());
+        window.gtag('config', measurementId, {
+          // No incluir parámetros ni fragmentos usados por los enlaces de Auth.
+          page_location: window.location.origin + window.location.pathname,
+        });
+        const googleTag = document.createElement('script');
+        googleTag.async = true;
+        googleTag.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+        document.head.append(googleTag);
+      }
+    </script>
+    <link rel="stylesheet" href="/src/assets/styles.css" />
+    <script type="module" src="/src/js/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#subastas">Saltar a las subastas</a>
+    <header class="site-header">
+      <div class="container nav-row">
+        <a class="brand" href="#" aria-label="HSubastas, inicio"><span class="brand-icon" aria-hidden="true">h<span>↘</span></span>HSubastas<span class="brand-dot">.</span></a>
+        <nav aria-label="Navegación principal"><a href="#subastas">Explorar subastas</a><a href="#como-funciona">Cómo funciona</a><a href="#proveedores">Para proveedores <span aria-hidden="true">↗</span></a></nav>
+        <div class="auth-nav" aria-label="Acceso de usuarios">
+          <button id="auth-open-login" class="text-link" type="button" disabled>Iniciar sesión</button>
+          <button id="auth-open-register" class="button button-dark nav-cta" type="button" disabled>Registrarse ↗</button>
+          <button id="auth-open-account" class="button button-dark nav-cta" type="button" hidden>Mi cuenta</button>
+        </div>
+      </div>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow"><span class="live-dot"></span> OTRA FORMA DE COMPRAR EN BOLIVIA</p>
+            <h1>Tú necesitas.<br />Ellos compiten.<br /><em>Tú ahorras.</em></h1>
+            <p class="hero-description">Publica lo que buscas y define tu presupuesto máximo. Los proveedores compiten con ofertas a la baja para darte una mejor opción.</p>
+            <div class="hero-actions"><a href="#subastas" class="button button-dark">Explorar subastas <span aria-hidden="true">↗</span></a><a href="#como-funciona" class="text-link">Conoce cómo funciona <span aria-hidden="true">→</span></a></div>
+            <div class="hero-note"><span aria-hidden="true">◎</span> Subastas inversas · C2B y B2B · Hecho para Bolivia</div>
+          </div>
+          <div class="hero-visual" aria-label="Ejemplo ilustrativo de una subasta inversa">
+            <div class="visual-topline"><span>EL PRECIO BAJA. LAS OPORTUNIDADES SUBEN.</span><span aria-hidden="true">↘</span></div>
+            <div class="example-card">
+              <div class="example-label"><span class="pill">Ejemplo ilustrativo</span><span aria-hidden="true">↗</span></div>
+              <span class="small-label">REQUERIMIENTO DEL COMPRADOR</span>
+              <h2>Equipamos tu<br />próximo gran paso.</h2>
+              <p>10 computadoras para oficina</p>
+              <div class="example-budget"><span>Presupuesto máximo</span><strong>Bs 45.000</strong></div>
+              <div class="offer-row"><span><i class="avatar">A</i> Proveedor A</span><strong>Bs 43.500</strong></div>
+              <div class="offer-row"><span><i class="avatar">B</i> Proveedor B</span><strong>Bs 41.800</strong></div>
+              <div class="offer-row best"><span><i class="avatar">C</i> Mejor oferta del ejemplo</span><strong>Bs 39.900 <span aria-hidden="true">↘</span></strong></div>
+            </div>
+            <div class="saving-stamp"><span aria-hidden="true">↘</span><div><strong>Tu presupuesto rinde más</strong><small>La competencia trabaja a tu favor.</small></div></div>
+            <span class="visual-caption">Una necesidad. Varios proveedores. Mejores posibilidades.</span>
+          </div>
+        </div>
+      </section>
+      <div class="principles"><div class="container principles-row"><span>Un mercado con las reglas a tu favor</span><span>↘ Ofertas a la baja</span><span>◎ Competencia transparente</span><span>↔ Conexión directa</span></div></div>
+      <section id="subastas" class="section container">
+        <div class="section-heading"><div><p class="eyebrow">ENCUENTRA TU PRÓXIMA OPORTUNIDAD</p><h2>Subastas inversas activas<span class="brand-dot">.</span></h2><p>Necesidades reales buscan a los proveedores indicados.</p></div><span id="connection-status" class="connection" role="status">Preparando catálogo…</span></div>
+        <div class="catalog-toolbar"><div class="search-box"><span aria-hidden="true">⌕</span><label class="sr-only" for="search">Buscar un requerimiento</label><input id="search" type="search" placeholder="¿Qué oportunidad estás buscando?" /></div><label class="category-label" for="category">Categoría<select id="category"><option value="">Todas las categorías</option><option>Tecnología</option><option>Construcción</option><option>Servicios</option><option>Insumos</option></select></label></div>
+        <div class="market-actions"><button id="publish-open" class="button button-dark" type="button">Publicar requerimiento +</button><span>Una cuenta para comprar y proveer.</span></div>
+        <div class="catalog-tabs" role="group" aria-label="Catálogo"><button id="catalog-active" class="text-link" type="button" aria-pressed="true">Subastas activas</button><button id="catalog-mine" class="text-link" type="button" aria-pressed="false">Mi actividad</button></div>
+        <div class="catalog-meta"><p id="catalog-message" role="status" aria-live="polite">Cargando requerimientos…</p><button id="refresh" class="text-link" type="button">Actualizar <span aria-hidden="true">↻</span></button></div>
+        <div id="auction-grid" class="auction-grid" aria-busy="true"></div>
+        <noscript><p class="notice">Activa JavaScript para consultar las subastas y recibir actualizaciones.</p></noscript>
+      </section>
+      <section id="como-funciona" class="how-section"><div class="container"><div class="section-heading"><div><p class="eyebrow">MENOS VUELTAS. MEJORES OFERTAS.</p><h2>Comprar mejor empieza contigo.</h2></div><p class="section-aside">En una subasta tradicional, el precio sube.<br />Aquí, los proveedores compiten para bajarlo.</p></div><div class="steps"><article><span class="step-number">01 /</span><h3>Cuéntanos qué necesitas</h3><p>El comprador define su requerimiento, las condiciones y el presupuesto máximo.</p></article><article><span class="step-number">02 /</span><h3>Las ofertas empiezan a bajar</h3><p>Los proveedores presentan propuestas competitivas dentro del plazo de la subasta.</p></article><article><span class="step-number">03 /</span><h3>Elige con más información</h3><p>Compara el precio y las condiciones para elegir la propuesta que mejor responde a tu necesidad.</p></article></div></div></section>
+      <section class="container section role-grid"><article id="compradores" class="role-card buyer"><p class="eyebrow">PARA COMPRADORES</p><h2>Tu próxima compra,<br />con más posibilidades.</h2><p>Seas una persona o una empresa, empieza por definir qué necesitas, cuándo y cuánto puedes invertir.</p><a href="#subastas" class="text-link">Publica tu requerimiento <span aria-hidden="true">↗</span></a><small>Inicia sesión y selecciona Publicar requerimiento. Agrega tu WhatsApp si deseas recibir consultas.</small></article><article id="proveedores" class="role-card supplier"><p class="eyebrow">PARA PROVEEDORES</p><h2>Hay alguien buscando<br />lo que tú ofreces.</h2><p>Explora requerimientos, conoce sus condiciones y descubre oportunidades para tu negocio.</p><a href="#subastas" class="text-link">Encontrar oportunidades <span aria-hidden="true">↗</span></a><small>Abre un requerimiento y envía una oferta que mejore el precio. Tu misma cuenta permite comprar y proveer.</small></article></section>
+    </main>
+    <footer>
+      <div class="container footer-top">
+        <div><a class="brand" href="#"><span class="brand-icon" aria-hidden="true">h<span>↘</span></span>HSubastas.</a><p>Conectamos necesidades con oportunidades.</p></div>
+        <div><span class="small-label">COMERCIO ELECTRÓNICO EN BOLIVIA</span><p>Plataforma de subastas inversas C2B / B2B</p><a href="https://hsubastas.com.bo">hsubastas.com.bo <span aria-hidden="true">↗</span></a></div>
+        <div class="footer-social"><span class="small-label">HSUBASTAS EN REDES</span>
+          <!-- Perfiles simulados para la presentación académica. Sustituir por los oficiales. -->
+          <nav aria-label="Redes sociales de HSubastas" class="social-links">
+            <a href="https://www.facebook.com/hsubastas" target="_blank" rel="noopener noreferrer nofollow"><span class="social-icon" aria-hidden="true">f</span> Facebook <span aria-hidden="true">↗</span></a>
+            <a href="https://www.instagram.com/hsubastas/" target="_blank" rel="noopener noreferrer nofollow"><svg class="social-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17" cy="7" r="1" fill="currentColor" stroke="none"/></svg> Instagram <span aria-hidden="true">↗</span></a>
+          </nav><p class="social-note">Perfiles de demostración.</p>
+        </div>
+      </div>
+      <div class="container footer-bottom"><span>© <span id="year">2026</span> HSubastas. Proyecto individual.</span><span>Construyendo una nueva forma de comprar.</span></div>
+    </footer>
+    <dialog id="auction-dialog" class="market-detail" aria-labelledby="dialog-title">
+      <button id="close-dialog" class="dialog-close" type="button" aria-label="Cerrar detalle">×</button>
+      <p class="eyebrow">DETALLE DEL REQUERIMIENTO</p><h2 id="dialog-title"></h2><p id="dialog-description"></p><dl id="dialog-facts"></dl>
+      <section class="bid-section" aria-labelledby="bid-title"><h3 id="bid-title">Ofertas a la baja</h3><p id="bid-help" class="market-help"></p>
+        <button id="detail-login" class="text-link" type="button" hidden>Iniciar sesión para participar ↗</button>
+        <ol id="bid-list" class="bid-list"></ol>
+        <form id="bid-form" class="market-form" hidden><label for="bid-amount">Tu oferta en bolivianos (BOB)<input id="bid-amount" type="number" min="0.01" step="0.01" max="999999999999.99" required /></label><small>El comprador podrá contactarte con el WhatsApp que registres en Mi cuenta.</small><button id="bid-submit" class="button button-dark" type="submit">Enviar oferta a la baja ↘</button></form>
+        <p id="bid-status" class="market-status" role="status" aria-live="polite" hidden></p>
+      </section>
+      <section class="contact-section" aria-label="Contacto del comprador"><a id="auction-whatsapp" class="button whatsapp-button" target="_blank" rel="noopener noreferrer" hidden>Contactar al comprador por WhatsApp ↗</a><p id="contact-help" class="market-help"></p></section>
+    </dialog>
+    <dialog id="publish-dialog" aria-labelledby="publish-title">
+      <button id="publish-close" class="dialog-close" type="button" aria-label="Cerrar publicación">×</button>
+      <p class="eyebrow">ENCUENTRA TU MEJOR OFERTA</p><h2 id="publish-title">Publicar requerimiento</h2>
+      <form id="publish-form" class="market-form">
+        <label for="auction-title">Título<input id="auction-title" name="title" type="text" maxlength="160" required /></label>
+        <label for="auction-description">Descripción<textarea id="auction-description" name="description" rows="4" maxlength="5000" required></textarea></label>
+        <div class="market-form-row"><label for="auction-category">Categoría<select id="auction-category" name="category" required><option value="">Selecciona una categoría</option><option>Tecnología</option><option>Construcción</option><option>Servicios</option><option>Insumos</option></select></label><label for="auction-city">Ciudad<input id="auction-city" name="city" type="text" maxlength="100" required /></label></div>
+        <label for="auction-budget">Presupuesto máximo (BOB)<input id="auction-budget" name="max_budget" type="number" min="0.01" step="0.01" max="999999999999.99" required /></label>
+        <label for="auction-deadline">Fecha y hora de cierre (Bolivia, UTC−4)<input id="auction-deadline" name="ends_at" type="datetime-local" required /></label>
+        <label for="auction-phone">WhatsApp de contacto (opcional)<input id="auction-phone" name="phone" type="tel" autocomplete="tel" placeholder="+591 71234567" maxlength="24" aria-describedby="phone-help" /></label>
+        <small id="phone-help">Al agregar tu número, aceptas compartirlo con usuarios que hayan iniciado sesión para negociar este requerimiento.</small>
+        <button id="publish-submit" class="button button-dark" type="submit">Publicar requerimiento</button>
+      </form><p id="publish-status" class="market-status" role="status" aria-live="polite" hidden></p>
+    </dialog>
+    <dialog id="auth-dialog" class="auth-modal" aria-labelledby="auth-title">
+      <button id="auth-close" class="dialog-close" type="button" aria-label="Cerrar acceso de usuarios">×</button>
+      <p class="eyebrow">TU ESPACIO EN HSUBASTAS</p>
+      <h2 id="auth-title">Bienvenido de nuevo</h2>
+      <div id="auth-tabs" class="auth-tabs" role="group" aria-label="Tipo de acceso">
+        <button type="button" data-auth-mode="login" aria-pressed="true">Iniciar sesión</button>
+        <button type="button" data-auth-mode="register" aria-pressed="false">Registrarse</button>
+      </div>
+      <form id="auth-form" class="auth-form">
+        <fieldset id="auth-register-fields" hidden>
+          <legend class="sr-only">Datos del nuevo usuario</legend>
+          <label for="auth-name">Nombre completo<input id="auth-name" name="name" type="text" autocomplete="name" maxlength="100" /></label>
+        </fieldset>
+        <label for="auth-email">Correo electrónico<input id="auth-email" name="email" type="email" autocomplete="email" maxlength="254" required /></label>
+        <label for="auth-password">Contraseña<input id="auth-password" name="password" type="password" autocomplete="current-password" required aria-describedby="auth-password-help" /></label>
+        <small id="auth-password-help" hidden>Usa al menos 8 caracteres. Es posible que debas confirmar tu correo para acceder.</small>
+        <button id="auth-submit" class="button button-dark" type="submit">Iniciar sesión</button>
+      </form>
+      <section id="auth-account" hidden aria-label="Datos de mi cuenta">
+        <dl class="auth-profile"><dt>Nombre</dt><dd id="account-name"></dd><dt>Correo</dt><dd id="account-email"></dd><dt>Cuenta</dt><dd id="account-role"></dd></dl>
+        <form id="account-phone-form" class="auth-form account-phone-form"><label for="account-phone">Mi WhatsApp boliviano<input id="account-phone" name="whatsapp_phone" type="tel" autocomplete="tel" placeholder="+591 71234567" maxlength="24" aria-describedby="account-phone-help" /></label><small id="account-phone-help">Al guardarlo aceptas compartirlo con los compradores de tus ofertas. Puedes actualizarlo o dejarlo vacío para retirarlo.</small><button id="account-phone-save" type="submit" class="button button-dark">Guardar WhatsApp</button></form>
+        <p id="account-warning" class="notice" hidden>La sesión está activa, pero no pudimos leer tu perfil. Revisa que se haya ejecutado auth.sql y que la política RLS permita leer tu propio usuario.</p>
+        <div class="auth-account-actions"><button id="auth-logout" type="button" class="button button-dark">Cerrar sesión</button><button id="auth-retry-profile" type="button" class="text-link">Actualizar perfil ↻</button></div>
+      </section>
+      <p id="auth-status" class="auth-status" role="status" aria-live="polite" hidden></p>
+    </dialog>
+  </body>
+</html>
