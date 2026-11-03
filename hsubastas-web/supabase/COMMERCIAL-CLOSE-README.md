@@ -1,5 +1,21 @@
 # Panel post-adjudicación
 
+## Presentación actual
+
+El panel exige status = closed (estado persistido que representa una adjudicación),
+awarded_bid_id coincidente con la puja ganadora, proveedor identificado e importe
+positivo. Se mantiene el acceso exclusivo de comprador/ganador validado por la RPC.
+
+El botón principal coordina el cierre con el WhatsApp corporativo +591 68647272,
+con un mensaje que incluye el resumen de adjudicación. No depende de que la
+contraparte haya registrado un celular. Los contactos personales de las ofertas
+siguen funcionando en su sección correspondiente.
+
+La simulación PayPal incluye tarjetas de referencia Visa, Mastercard y Amex,
+color #0070ba y leyenda ilustrativa «cifrado SSL 256-bit», junto al aviso de
+simulación académica. No afirma que una conexión local HTTP esté cifrada y no
+procesa pagos. Esta actualización visual no requiere cambios SQL adicionales.
+
 Ejecutar `commercial-close.sql` después de profile-whatsapp.sql y recargar la web.
 El script no modifica perfiles, ofertas, adjudicaciones ni pagos: agrega únicamente
 la RPC get_commercial_close, con EXECUTE solo para authenticated.
