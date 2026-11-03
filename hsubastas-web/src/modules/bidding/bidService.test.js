@@ -38,3 +38,11 @@ test('rechazo del servidor por precio concurrente o subasta propia se conserva',
     await assert.rejects(service.submit('auction','12'),error => error.message===message);
   }
 });
+
+test('Realtime escucha solo nuevas pujas del requerimiento y elimina el canal al cerrar',async () => {
+  let callback,removed=false;
+  const channel={on(event,filter,fn){assert.equal(event,'postgres_changes');assert.deepEqual(filter,{event:'INSERT',schema:'public',table:'bids',filter:'auction_id=eq.auction-1'});callback=fn;return this;},subscribe(){return this;}};
+  const service = createBidService(async () => ({channel(){return channel;},async removeChannel(value){assert.equal(value,channel);removed=true;}}));
+  let events=0;const stop = await service.watch('auction-1',() => events++);
+  callback();assert.equal(events,1);stop();assert.equal(removed,true);
+});

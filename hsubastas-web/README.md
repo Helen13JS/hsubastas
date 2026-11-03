@@ -1,5 +1,78 @@
 # HSubastas · hsubastas.com.bo
 
+## Portal corporativo en React
+
+La interfaz está migrada a React y React DOM con Vite. `src/main.jsx` monta App,
+que conecta las vistas con un navbar horizontal fijo, sin navegación lateral.
+Las rutas usan hash para funcionar en hosting estático sin reglas de reescritura:
+
+- `/#/inicio`: HomeView, hero, funcionamiento, FAQ y contenido institucional.
+- `/#/subastas`: AuctionsView, filtros, cuenta regresiva, PDF, pujas y adjudicación.
+- `/#/subastas?mine=1`: actividad propia y resultados. Los enlaces con `auction=UUID`
+  abren directamente el detalle autorizado.
+- `/#/publicar`: CreateView, formulario protegido y PDF de vista previa.
+- `/#/perfil`: ProfileView, información de cuenta, estado real y WhatsApp editable.
+
+AuthProvider conserva sesión y perfil compartidos. Los componentes usan los servicios
+existentes de Supabase; esta migración no requiere cambios SQL ni nuevas claves.
+Los perfiles no se muestran como empresas verificadas: aún no existe un proceso de
+verificación empresarial en el backend. La campana muestra adjudicaciones y plazos
+finalizados de la actividad real del usuario, consultados cada 30 segundos. No es
+un servicio de mensajes ni una suscripción a notificaciones push.
+
+Al cambiar de cuenta se desmontan las vistas privadas y se descartan respuestas
+pendientes. Cada vista elimina sus intervalos y canales al salir. Se mantienen
+Inter/Montserrat, paleta tierra, footer institucional, SEO y configuración GA4.
+
+```powershell
+npm.cmd install
+npm.cmd run dev
+# http://127.0.0.1:5174/#/inicio
+npm.cmd test
+npm.cmd run build
+```
+
+Las pruebas incluyen servicios y flujo de adjudicación, más renderizado de los
+componentes React con sesiones simuladas. `npm.cmd run test:portal` ejecuta solo
+la verificación del portal. No se realizó revisión visual ni prueba remota de Auth
+o Realtime en este cambio. El PDF se genera en el navegador; Supabase aplica las
+políticas y funciones configuradas en los hitos anteriores.
+
+## Interfaz corporativa, documentos y ayuda
+
+La landing incorpora los textos B2B/C2B solicitados, tipografía Inter/Montserrat,
+paleta tierra, FAQ e información institucional con enlaces desde el footer.
+Los textos de términos y privacidad reproducen el contenido suministrado para
+el proyecto; esta implementación no constituye una revisión jurídica.
+
+El CTA del hero abre el formulario protegido de publicación. Las tarjetas muestran
+el presupuesto con dos decimales en BOB y cuenta regresiva HH : MM : SS (las horas
+pueden superar 24), actualizada cada segundo con la pestaña visible.
+
+Descargar_Especificaciones_Tecnicas.pdf genera una ficha PDF por requerimiento con
+título, referencia, ubicación, categoría, presupuesto, fecha y descripción publicados.
+No se requiere servidor de archivos ni se inventan especificaciones. Es una ficha
+generada, no un sistema de carga de adjuntos del comprador. Los ejemplos siguen
+identificados en la interfaz como ilustrativos.
+
+Tras adjudicar, el enlace de WhatsApp incluye un resumen automático con referencia
+del requerimiento, ID de oferta ganadora, proveedor, importe y ubicación para
+coordinar pagos y entrega. WhatsApp nunca envía el mensaje automáticamente. El botón
+flotante del detalle usa el contacto real del comprador o del proveedor seleccionado/
+ganador y se oculta al cerrar el detalle o cerrar sesión; no hay teléfono inventado.
+
+Para recibir nuevas pujas por Realtime, ejecutar `supabase/realtime-bids.sql` una vez
+en el SQL Editor. Solo agrega bids a supabase_realtime, sin modificar permisos ni
+publicar tablas de contactos. El detalle se suscribe a INSERT de su requerimiento y
+vuelve a consultar la RPC autorizada; mantiene el sondeo de 15 segundos como respaldo.
+La suscripción se elimina al cerrar el detalle o cambiar de sesión.
+
+Comprobar en navegador: CTA público/con sesión, enlaces del footer, FAQ por teclado,
+descarga y apertura del PDF, cuenta regresiva, cambio de tamaño y contacto contextual.
+Las pruebas automáticas cubren generación PDF, offsets, múltiples páginas, countdown,
+resumen WhatsApp y ciclo de vida del canal, además de los flujos existentes. No se
+realizó revisión visual en un navegador ni prueba remota de Realtime en este cambio.
+
 ## SEO, analítica y redes
 
 index.html incluye título y descripción SEO para subastas inversas en Bolivia.
@@ -160,10 +233,14 @@ hsubastas-web/
 ├── .env.example
 ├── package.json         # Vite: entorno local y compilación
 ├── src/
-│   ├── assets/styles.css
-│   ├── js/
-│   │   ├── supabaseClient.js
-│   │   └── main.js
+│   ├── main.jsx
+│   ├── App.jsx
+│   ├── routing.js
+│   ├── components/       # Navbar, Footer, AuthDialog, AuctionDetail y Dialog
+│   ├── views/            # HomeView, AuctionsView, CreateView, ProfileView
+│   ├── context/AuthContext.jsx
+│   ├── assets/           # styles.css y portal.css
+│   ├── js/supabaseClient.js
 │   └── modules/
 │       ├── auth/          # servicio, interfaz, estilos, tests y README
 │       ├── auctions/
@@ -180,7 +257,7 @@ hsubastas-web/
 └── README.md
 ```
 
-HTML5, CSS responsivo personalizado y JavaScript ES Modules. Vite solo gestiona
+React, HTML5, CSS responsivo personalizado y JavaScript ES Modules. Vite gestiona
 el entorno y la compilación; el acceso a PostgreSQL está desacoplado mediante
 `auctionService.js`. Supabase proporciona la API y Realtime con permisos RLS.
 No se necesita un servidor Node en producción para este hito.
@@ -189,9 +266,9 @@ El catálogo realiza una consulta inicial y escucha `postgres_changes` de
 `public.auctions`. Al recibir un evento vuelve a consultar los datos autorizados.
 Un sondeo cada 30 segundos y al volver a la pestaña cubre expiraciones, desconexiones
 y cambios de visibilidad que RLS puede dejar de entregar por Realtime. El canal
-se elimina al abandonar la página. Si falla la red, conserva el último catálogo
-y advierte que no se pudo actualizar; no lo sustituye por ejemplos.
-Los textos de Supabase se insertan con `textContent`, sin interpretar HTML.
+se elimina al salir de la vista. Si falla la red, se advierte que no se pudo
+consultar el catálogo; no se sustituye por ejemplos.
+React escapa los textos de Supabase y no se utiliza dangerouslySetInnerHTML.
 Importes en BOB; fechas del detalle en `America/La_Paz`.
 
 El CDN de Supabase se carga solo al configurar credenciales. Las fuentes remotas

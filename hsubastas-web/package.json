@@ -3,6 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "scripts": { "dev": "vite --host 127.0.0.1 --port 5174", "build": "vite build", "preview": "vite preview --host 127.0.0.1", "test:auth": "node --test src/modules/auth/*.test.js", "test": "node --test src/modules/auth/*.test.js src/modules/auctions/*.test.js src/modules/bidding/*.test.js" },
-  "devDependencies": { "vite": "^7.1.0" }
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5174",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test:auth": "node --test src/modules/auth/*.test.js",
+    "test": "node --test src/modules/auth/*.test.js src/modules/auctions/*.test.js src/modules/bidding/*.test.js && node scripts/test-portal.mjs",
+    "test:portal": "node scripts/test-portal.mjs"
+  },
+  "devDependencies": {
+    "vite": "^7.1.0"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  }
 }

@@ -5,7 +5,7 @@ no del formulario de puja. Mi cuenta permite editarlo. La adjudicación llama a
 award_bid_with_contact y abre el número actual del ganador después de confirmar.
 
 `bidService.js` lista ofertas por precio ascendente y envía pujas mediante la RPC
-`submit_bid`. El formulario y el listado se integran al detalle en marketplaceUI.js.
+`submit_bid`. El formulario y el listado se integran en components/AuctionDetail.jsx.
 Aplicar `supabase/marketplace.sql` después de auth.sql antes de usar el módulo.
 
 El servidor determina provider_id por auth.uid(), bloquea la subasta y exige monto

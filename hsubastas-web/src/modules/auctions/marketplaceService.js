@@ -24,9 +24,14 @@ export function validateAmount(value) {
   return number;
 }
 
-export function whatsappLink(phone, title) {
+export function awardSummary(auction, bid) {
+  const amount = new Intl.NumberFormat('es-BO',{minimumFractionDigits:2,maximumFractionDigits:2}).format(bid.offered_amount);
+  return `Resumen de adjudicación | HSubastas\nRequerimiento: ${auction.title}\nReferencia: ${auction.id}\nOferta ganadora: ${bid.id}\nProveedor: ${bid.provider_name || 'Proveedor ganador'}\nImporte adjudicado: ${amount} BOB\nUbicación: ${auction.city || 'Bolivia'}\nCoordinemos el pago y la entrega del material.\nhsubastas.com.bo`;
+}
+
+export function whatsappLink(phone, title, summary = null) {
   const normalized = normalizePhone(phone);
-  return normalized ? `https://wa.me/${normalized}?text=${encodeURIComponent(`Hola, te contacto por el requerimiento «${title}» en HSubastas.`)}` : null;
+  return normalized ? `https://wa.me/${normalized}?text=${encodeURIComponent(summary || `Hola, te contacto por el requerimiento «${title}» en HSubastas.`)}` : null;
 }
 
 export function marketplaceError(error) {

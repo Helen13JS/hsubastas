@@ -8,6 +8,13 @@ export function createBidService(getClient = getSupabaseClient) {
     return result;
   }
   return {
+    async watch(id, onChange) {
+      const supabase = await client();
+      const channel = supabase.channel(`auction-bids-${id}`)
+        .on('postgres_changes',{event:'INSERT',schema:'public',table:'bids',filter:`auction_id=eq.${id}`},onChange)
+        .subscribe();
+      return () => { void supabase.removeChannel(channel); };
+    },
     async list(id) {
       const { data, error } = await (await client()).rpc('list_auction_offers', { p_auction_id: id });
       if (error) throw error;

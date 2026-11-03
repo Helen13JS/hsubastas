@@ -1,5 +1,18 @@
 # Publicación, detalle y contacto
 
+## Tarjetas corporativas y documentos
+
+Las tarjetas muestran presupuesto en BOB con dos decimales, ubicación, título de
+lote y cuenta regresiva HH : MM : SS. La descarga PDF se genera con los datos
+publicados mediante specifications.js y admite descripciones de múltiples páginas.
+No requiere un nuevo campo de Supabase ni supone que existe un PDF adjunto subido.
+
+Aplicar supabase/realtime-bids.sql para habilitar eventos de inserción de pujas.
+El detalle escucha las nuevas ofertas del requerimiento abierto y vuelve a leer
+el listado ordenado mediante RPC, conservando el sondeo de 15 segundos. Los enlaces
+de la ganadora incluyen el resumen de adjudicación y el botón flotante se limita al
+contacto real del detalle. Las FAQ y los textos institucionales están en views/HomeView.jsx.
+
 ## WhatsApp del perfil del proveedor
 
 Aplicar `supabase/profile-whatsapp.sql` después de awards.sql. El número del proveedor

@@ -36,7 +36,9 @@ iniciar sesión. Para producción configurar SMTP y revisar límites de correo.
 ## 3. Responsabilidades
 
 - `authService.js`: registro, login, logout, lectura del perfil y eventos de Auth.
-- `authUI.js`: modal, validación, estados y header con sesión persistente.
+- `context/AuthContext.jsx`: sesión y perfil compartidos entre vistas React.
+- `components/AuthDialog.jsx`: registro e inicio de sesión.
+- `components/Navbar.jsx` y `views/ProfileView.jsx`: acceso a cuenta y perfil.
 - `auth.css`: estilos del módulo.
 - `supabase/auth.sql`: vínculo con Auth, triggers y RLS.
 
