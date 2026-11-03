@@ -81,6 +81,7 @@ export function createMarketplaceService(getClient = getSupabaseClient) {
       return data;
     },
     getContact(id) { return rpc('get_auction_contact', { p_auction_id: id }); },
+    getClosure(id) { return rpc('get_commercial_close', { p_auction_id: id }); },
     async subscribeAuth(callback) {
       const { data } = (await client()).auth.onAuthStateChange(callback);
       return () => data.subscription.unsubscribe();

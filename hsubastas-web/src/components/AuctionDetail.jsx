@@ -6,6 +6,7 @@ import { awardAndContact } from "../modules/bidding/awardFlow.js";
 import Dialog from "./Dialog.jsx";
 import SpecificationsLink from "./SpecificationsLink.jsx";
 import WhatsAppLink from './WhatsAppLink.jsx';
+import CommercialClosePanel from './CommercialClosePanel.jsx';
 const service = createMarketplaceService(), bids = createBidService();
 const money = new Intl.NumberFormat("es-BO", { style: "currency", currency: "BOB", minimumFractionDigits: 2 });
 const date = new Intl.DateTimeFormat("es-BO", { dateStyle: "medium", timeStyle: "short", timeZone: "America/La_Paz" });
@@ -16,10 +17,14 @@ function contact(phone, title, summary) {
     return null;
   }
 }
+function OfferHistory({awarded,count,children}){
+  return awarded?<details className="bid-history"><summary>Ver historial de ofertas ({count})</summary>{children}</details>:<>{children}</>;
+}
 function AuctionDetail({ initial, demo = false, onClose, onUpdated, openAuth }) {
   const { user } = useAuth();
   const [auction, setAuction] = useState(initial), [offers, setOffers] = useState([]), [buyerPhone, setBuyerPhone] = useState(null), [verified, setVerified] = useState(false), [offersLoaded, setOffersLoaded] = useState(false);
   const [message, setMessage] = useState(""), [failed, setFailed] = useState(false), [busy, setBusy] = useState(false), [pending, setPending] = useState(null);
+  const [closure,setClosure]=useState(null),[closureError,setClosureError]=useState('');
   const mounted = useRef(true), revision = useRef(0), identity = useRef(user?.id);
   identity.current = user?.id;
   const load = useCallback(async () => {
@@ -35,9 +40,10 @@ function AuctionDetail({ initial, demo = false, onClose, onUpdated, openAuth }) 
         setOffers([]);
         setBuyerPhone(null);
         setOffersLoaded(false);
+        setClosure(null);setClosureError('');
         return;
       }
-      const [list, phone] = await Promise.allSettled([bids.list(initial.id), service.getContact(initial.id)]);
+      const [list, phone,close] = await Promise.allSettled([bids.list(initial.id), service.getContact(initial.id),fresh.awarded_bid_id?service.getClosure(initial.id):Promise.resolve(null)]);
       if (!valid()) return;
       if (list.status === "fulfilled") {
         setOffers(list.value);
@@ -48,12 +54,15 @@ function AuctionDetail({ initial, demo = false, onClose, onUpdated, openAuth }) 
         setMessage(marketplaceError(list.reason));
       }
       setBuyerPhone(phone.status === "fulfilled" ? phone.value : null);
+      setClosure(close.status==='fulfilled'?close.value:null);
+      setClosureError(close.status==='rejected'&&close.reason?.message!=='CLOSE_ACCESS_DENIED'?'No se pudo consultar el cierre comercial. Comprueba que commercial-close.sql esté aplicado y vuelve a intentar.':'');
     } catch (error) {
       if (valid()) {
         setVerified(false);
         setOffersLoaded(false);
         setOffers([]);
         setBuyerPhone(null);
+        setClosure(null);
         setFailed(true);
         setMessage(marketplaceError(error));
       }
@@ -63,6 +72,7 @@ function AuctionDetail({ initial, demo = false, onClose, onUpdated, openAuth }) 
     mounted.current = true;
     setOffers([]);
     setBuyerPhone(null);
+    setClosure(null);setClosureError('');
     setOffersLoaded(false);
     setVerified(false);
     setPending(null);
@@ -149,7 +159,8 @@ function AuctionDetail({ initial, demo = false, onClose, onUpdated, openAuth }) 
   }
   return <Dialog title={auction.title} onClose={onClose} className="market-detail" titleId="auction-detail-title">
     <p className="market-help">{auction.description}</p><dl className="detail-facts"><dt>Presupuesto máximo</dt><dd>{money.format(auction.max_budget)}</dd><dt>Ubicación</dt><dd>{auction.city}, Bolivia</dd><dt>Cierre (Bolivia)</dt><dd>{date.format(new Date(auction.ends_at))}</dd><dt>Estado</dt><dd>{auction.awarded_bid_id ? "Adjudicada" : closed ? "Plazo finalizado / cerrada" : "Activa"}</dd></dl><SpecificationsLink auction={auction} />
-    <section className="bid-section"><div className="bid-section-heading"><h3>Ofertas a la baja</h3>{user&&!demo&&<span className="offers-count">{offers.length} {offers.length===1?'oferta':'ofertas'}</span>}</div>{demo ? <p className="notice">Ejemplo ilustrativo. Las ofertas requieren una subasta real.</p> : !user ? <><p>Inicia sesión para ver ofertas y contactos.</p><button className="button button-dark" onClick={() => {
+    {user&&verified&&auction.awarded_bid_id&&<><CommercialClosePanel key={auction.awarded_bid_id} auction={auction} closure={closure}/>{closureError&&<p className="market-status" data-error="true" role="status">{closureError}</p>}</>}
+    <OfferHistory awarded={Boolean(auction.awarded_bid_id)} count={offers.length}><section className="bid-section"><div className="bid-section-heading"><h3>Ofertas a la baja</h3>{user&&!demo&&<span className="offers-count">{offers.length} {offers.length===1?'oferta':'ofertas'}</span>}</div>{demo ? <p className="notice">Ejemplo ilustrativo. Las ofertas requieren una subasta real.</p> : !user ? <><p>Inicia sesión para ver ofertas y contactos.</p><button className="button button-dark" onClick={() => {
     onClose();
     openAuth("login");
   }}>Iniciar sesión</button></> : <>
@@ -170,8 +181,8 @@ function AuctionDetail({ initial, demo = false, onClose, onUpdated, openAuth }) 
     </li>;
   })}{offersLoaded && !offers.length && <li>Todavía no hay ofertas.</li>}</ol>
       {verified && offersLoaded && !owner && !closed && <form className="market-form bid-entry" onSubmit={submit}><h4>Presenta tu oferta</h4><div className="bid-entry-row"><label>Importe en bolivianos<input name="amount" type="number" placeholder="0.00" min="0.01" max={Math.max(0, Number(best) - 0.01).toFixed(2)} step="0.01" required disabled={busy} /></label><button className="button button-dark" disabled={busy || Number(best) <= 0.01}>{busy?'Enviando…':'Enviar oferta ↘'}</button></div><small>Se usará el WhatsApp que hayas guardado en Mi cuenta.</small></form>}
-    </>}</section>{message && <p className="market-status" data-error={failed} role="status">{message}</p>}
-    {buyerUrl&&<div className="detail-contact-bar"><div><strong>¿Tienes alguna consulta?</strong><p>Contacta directamente al comprador.</p></div><WhatsAppLink href={buyerUrl} label="Contactar al comprador por WhatsApp"/></div>}
+    </>}</section></OfferHistory>{message && <p className="market-status" data-error={failed} role="status">{message}</p>}
+    {buyerUrl&&!closure&&<div className="detail-contact-bar"><div><strong>¿Tienes alguna consulta?</strong><p>Contacta directamente al comprador.</p></div><WhatsAppLink href={buyerUrl} label="Contactar al comprador por WhatsApp"/></div>}
   </Dialog>;
 }
 export {

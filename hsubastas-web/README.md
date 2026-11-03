@@ -1,5 +1,17 @@
 # HSubastas · hsubastas.com.bo
 
+## Cierre comercial y canales institucionales
+
+Aplicar `supabase/commercial-close.sql` después de profile-whatsapp.sql. El detalle
+adjudicado incluye un panel exclusivo de comprador/ganador, resumen, coordinación
+por WhatsApp y simulación visual de pago PayPal para comisiones/servicios.
+No procesa cobros ni guarda pagos reales. El historial de ofertas queda desplegable.
+[Guía del panel](supabase/COMMERCIAL-CLOSE-README.md).
+
+El footer muestra WhatsApp (+591 68647272), Facebook, Instagram, YouTube
+(https://youtube.com/@hsubastas?si=_gJEVwMvPjuUFwO3) y Telegram. Este último queda
+pendiente hasta definir VITE_TELEGRAM_URL; no se inventa un enlace de cuenta.
+
 ## Portal corporativo en React
 
 La interfaz está migrada a React y React DOM con Vite. `src/main.jsx` monta App,
@@ -84,9 +96,11 @@ parámetros de los enlaces de Auth. No se envían datos de formularios manualmen
 Comprobar la recepción con Tag Assistant o los informes de la propiedad al activarlo.
 [Configuración oficial de Google](https://developers.google.com/tag-platform/gtagjs).
 
-El footer incluye Facebook e Instagram como perfiles de demostración, identificados
-visiblemente. Reemplazar sus href por las cuentas corporativas verificadas y retirar
-la nota cuando existan perfiles reales. Las URLs actuales no acreditan titularidad.
+El footer conserva los enlaces anteriores de Facebook e Instagram e incorpora los
+canales de WhatsApp y YouTube proporcionados por el usuario. Instagram sigue marcado
+como demostración y Telegram como pendiente. Las variables VITE_FACEBOOK_URL,
+VITE_INSTAGRAM_URL, VITE_YOUTUBE_URL, VITE_CONTACT_WHATSAPP y VITE_TELEGRAM_URL permiten
+configurarlos sin editar componentes; no se usan enlaces con esquema inseguro.
 
 Base del proyecto individual de comercio electrónico: subastas inversas C2B/B2B.
 El comprador publica una necesidad con presupuesto máximo; los proveedores
