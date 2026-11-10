@@ -5,4 +5,6 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import "./modules/auth/auth.css";
 import "./modules/auctions/marketplace.css";
 import "./assets/portal.css";
+import "./assets/tailwind.css";
+import "./assets/communications.css";
 createRoot(document.getElementById("root")).render(<AuthProvider><App /></AuthProvider>);

@@ -8,11 +8,14 @@ declare
 begin
   if v_user is null then raise exception 'AUTH_REQUIRED' using errcode = 'P0001'; end if;
   select * into v_auction from public.auctions where id = p_auction_id;
-  if not found or v_auction.awarded_bid_id is null then
+  if not found or v_auction.status is distinct from 'closed' or v_auction.awarded_bid_id is null then
     raise exception 'AWARD_REQUIRED' using errcode = 'P0001';
   end if;
   select * into v_bid from public.bids where id = v_auction.awarded_bid_id and auction_id = p_auction_id;
-  if not found then raise exception 'INVALID_WINNER' using errcode = 'P0001'; end if;
+  if not found or v_bid.provider_id is null or v_bid.offered_amount is null
+    or v_bid.offered_amount::text in ('NaN','Infinity','-Infinity') or v_bid.offered_amount <= 0 then
+    raise exception 'INVALID_WINNER' using errcode = 'P0001';
+  end if;
   if v_user is distinct from v_auction.buyer_id and v_user is distinct from v_bid.provider_id then
     raise exception 'CLOSE_ACCESS_DENIED' using errcode = 'P0001';
   end if;
@@ -27,8 +30,8 @@ begin
     end if;
   end if;
   return jsonb_build_object('winning_bid_id',v_bid.id,'amount',v_bid.offered_amount,
-    'awarded_at',v_auction.awarded_at,'buyer_name',coalesce(v_buyer_name,'Comprador'),
-    'provider_name',coalesce(v_provider_name,'Proveedor ganador'),
+    'awarded_at',v_auction.awarded_at,'buyer_name',coalesce(nullif(trim(v_buyer_name),''),'Comprador'),
+    'provider_name',coalesce(nullif(trim(v_provider_name),''),'Proveedor ganador'),
     'viewer_role',case when v_user = v_auction.buyer_id then 'buyer' else 'winner' end,
     'counterpart_phone',v_phone);
 end;

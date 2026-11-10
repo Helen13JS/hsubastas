@@ -9,6 +9,8 @@ import HomeView from "./views/HomeView.jsx";
 import AuctionsView from "./views/AuctionsView.jsx";
 import CreateView from "./views/CreateView.jsx";
 import ProfileView from "./views/ProfileView.jsx";
+import SupportWidget from './components/SupportWidget.jsx';
+import TechnologyView from './views/TechnologyView.jsx';
 function App() {
   const [hash, setHash] = useState(() => typeof window === "undefined" ? "" : window.location.hash), [authMode, setAuthMode] = useState(null), [notifications, setNotifications] = useState([]), [notificationError, setNotificationError] = useState(false);
   const { user } = useAuth();
@@ -58,12 +60,13 @@ function App() {
   if (path === "/subastas") content = <AuctionsView key={user?.id||'guest'} openAuth={setAuthMode} navigate={navigate} query={query} />;
   else if (path === "/publicar") content = <CreateView key={user?.id||'guest'} openAuth={setAuthMode} navigate={navigate} />;
   else if (path === "/perfil") content = <ProfileView key={user?.id||'guest'} openAuth={setAuthMode} />;
+  else if (path === '/tecnologia') content = <TechnologyView/>;
   else if (path === "/no-encontrado") content = <section className="container section access-gate"><h1>No encontramos esta sección</h1><a href="#/inicio" className="button button-dark">Volver al inicio</a></section>;
   else content = <HomeView navigate={navigate} />;
   return <><a href="#portal-main" className="skip-link" onClick={(event) => {
     event.preventDefault();
     document.getElementById("portal-main").focus();
-  }}>Saltar al contenido</a><Navbar route={path} openAuth={setAuthMode} notifications={notificationUser===user?.id?notifications:[]} notificationError={notificationUser===user?.id&&notificationError} /><main id="portal-main" tabIndex={-1} className="portal-main">{content}</main><Footer />{authMode && <AuthDialog key={authMode} initialMode={authMode} onClose={() => setAuthMode(null)} />}</>;
+  }}>Saltar al contenido</a><Navbar route={path} openAuth={setAuthMode} notifications={notificationUser===user?.id?notifications:[]} notificationError={notificationUser===user?.id&&notificationError} /><main id="portal-main" tabIndex={-1} className="portal-main">{content}</main><Footer /><SupportWidget key={user?.id || 'guest'} openAuth={setAuthMode}/>{authMode && <AuthDialog key={authMode} initialMode={authMode} onClose={() => setAuthMode(null)} />}</>;
 }
 export {
   App as default

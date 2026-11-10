@@ -8,14 +8,17 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test:auth": "node --test src/modules/auth/*.test.js",
-    "test": "node --test src/modules/auth/*.test.js src/modules/auctions/*.test.js src/modules/bidding/*.test.js && node scripts/test-portal.mjs",
+    "test": "node --test src/modules/auth/*.test.js src/modules/auctions/*.test.js src/modules/bidding/*.test.js src/modules/payments/*.test.js src/modules/chat/*.test.js && node scripts/test-portal.mjs && node scripts/check-edge.mjs",
     "test:portal": "node scripts/test-portal.mjs"
   },
   "devDependencies": {
     "vite": "^7.1.0"
   },
   "dependencies": {
+    "@paypal/react-paypal-js": "^10.6.1",
+    "@tailwindcss/vite": "^4.3.5",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "tailwindcss": "^4.3.5"
   }
 }

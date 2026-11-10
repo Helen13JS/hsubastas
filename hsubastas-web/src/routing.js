@@ -1,4 +1,4 @@
-const views = new Set(['/inicio','/subastas','/como-funciona','/publicar','/perfil','/terminos','/privacidad','/preguntas-frecuentes','/proveedores']);
+const views = new Set(['/inicio','/subastas','/como-funciona','/publicar','/perfil','/terminos','/privacidad','/preguntas-frecuentes','/proveedores','/tecnologia']);
 export function resolveRoute(hash='') {
   const raw=hash.replace(/^#/,'');
   // Los fragmentos de confirmación de Auth los procesa Supabase, no el enrutador.

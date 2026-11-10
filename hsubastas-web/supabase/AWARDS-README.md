@@ -55,4 +55,5 @@ servidor también rechaza sus intentos de adjudicar.
 
 Los tests locales simulan servicio/DOM; no ejecutan PostgreSQL ni verifican RLS o
 concurrencia reales. Esas comprobaciones requieren aplicar el SQL en Supabase.
-No hay pagos, contratos, reversión de adjudicación ni envío automático de WhatsApp.
+Pagos y chat se incorporan mediante las migraciones posteriores descritas en
+[DEPLOYMENT.md](../DEPLOYMENT.md). No se incluyen contratos, reversión de adjudicación ni envío automático de WhatsApp.

@@ -1,0 +1,2 @@
+[functions.paypal-checkout]
+verify_jwt = true

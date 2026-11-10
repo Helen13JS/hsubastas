@@ -4,9 +4,23 @@
 
 Aplicar `supabase/commercial-close.sql` después de profile-whatsapp.sql. El detalle
 adjudicado incluye un panel exclusivo de comprador/ganador, resumen, coordinación
-por WhatsApp y simulación visual de pago PayPal para comisiones/servicios.
-No procesa cobros ni guarda pagos reales. El historial de ofertas queda desplegable.
+por WhatsApp, SDK oficial PayPal y chat privado. El pago crea/captura órdenes
+desde una Edge Function y conserva el resultado verificado; requiere configuración.
+El historial de ofertas queda desplegable.
 [Guía del panel](supabase/COMMERCIAL-CLOSE-README.md).
+
+**Nueva instalación:** aplicar también `supabase/payments.sql`, `supabase/chat.sql`
+y después `supabase/qr-payments.sql`.
+Aplicar luego `supabase/commission-3-percent.sql`: HSubastas cobra el 3% de la
+puja adjudicada al comprador. QR usa BOB; PayPal convierte a USD con el cambio
+comercial confirmado de 10 BOB por USD (`PAYPAL_BOB_PER_USD=10`).
+Configurar y desplegar la función según [Pagos, chat y Vercel](DEPLOYMENT.md).
+Sin estas configuraciones no se presentan pagos ni mensajes ficticios como exitosos.
+
+El cierre ahora incluye PayPal y **QR bancario nacional con verificación administrativa**.
+Administración carga el QR y revisa comprobantes desde Mi Cuenta; el comprador y
+el ganador consultan el resumen transaccional. Ver [guía QR](supabase/QR-PAYMENTS-README.md).
+Los registros de prueba Sandbox no acreditan un servicio pagado en dinero real.
 
 El footer muestra WhatsApp (+591 68647272), Facebook, Instagram, YouTube
 (https://youtube.com/@hsubastas?si=_gJEVwMvPjuUFwO3) y Telegram. Este último queda
@@ -26,7 +40,8 @@ Las rutas usan hash para funcionar en hosting estático sin reglas de reescritur
 - `/#/perfil`: ProfileView, información de cuenta, estado real y WhatsApp editable.
 
 AuthProvider conserva sesión y perfil compartidos. Los componentes usan los servicios
-existentes de Supabase; esta migración no requiere cambios SQL ni nuevas claves.
+existentes de Supabase. Pagos y chat requieren sus nuevas migraciones y la configuración
+de PayPal descrita en DEPLOYMENT.md.
 Los perfiles no se muestran como empresas verificadas: aún no existe un proceso de
 verificación empresarial en el backend. La campana muestra adjudicaciones y plazos
 finalizados de la actividad real del usuario, consultados cada 30 segundos. No es
@@ -271,7 +286,7 @@ hsubastas-web/
 └── README.md
 ```
 
-React, HTML5, CSS responsivo personalizado y JavaScript ES Modules. Vite gestiona
+React, HTML5, Tailwind CSS 4, CSS personalizado y JavaScript ES Modules. Vite gestiona
 el entorno y la compilación; el acceso a PostgreSQL está desacoplado mediante
 `auctionService.js`. Supabase proporciona la API y Realtime con permisos RLS.
 No se necesita un servidor Node en producción para este hito.
@@ -290,7 +305,7 @@ tienen alternativas del sistema. El catálogo vacío, la conexión fallida y el 
 demostración se distinguen visualmente. Auth implementa registro y sesión con
 perfiles propios. Auctions/bidding implementan publicación y ofertas vía RPC.
 Los detalles actualizan las ofertas cada 15 segundos. Adjudicación se habilita con
-awards.sql. No hay pagos.
+awards.sql. Los pagos y chats requieren payments.sql, chat.sql y la Edge Function.
 
 ## 5. Compilar y verificar
 

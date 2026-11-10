@@ -109,8 +109,8 @@ Prueba en Supabase con dos cuentas reales A/B:
 
 Las pruebas locales usan dobles del cliente y DOM simulado. No sustituyen verificar
 las funciones, RLS, concurrencia y enlaces con el proyecto real tras aplicar el SQL.
-Adjudicación se activa con awards.sql. No se implementan pagos, edición/cancelación
-ni mensajería interna.
+Adjudicación se activa con awards.sql. Pagos y chat se documentan en ../../../DEPLOYMENT.md. No se implementan edición/cancelación
+del requerimiento. La negociación privada y soporte requieren chat.sql.
 
 Referencias: [funciones Supabase](https://supabase.com/docs/guides/database/functions),
 [bloqueos PostgreSQL](https://www.postgresql.org/docs/17/explicit-locking.html).
