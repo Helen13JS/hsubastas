@@ -14,6 +14,7 @@ import SupportWidget from './components/SupportWidget.jsx';
 import TechnologyView from './views/TechnologyView.jsx';
 import QRCheckout, { qrStatusLabel } from './components/QRCheckout.jsx';
 import PaymentAdminPanel from './components/PaymentAdminPanel.jsx';
+import PayPalProvider from './context/PayPalProvider.jsx';
 import {getSocialLinks} from './socialLinks.js';
 const guest = { user: null, session: null, profile: null, loading: false, error: "", service: {}, refresh() {
 } };
@@ -21,6 +22,7 @@ const member = { ...guest, user: { id: "user-1", email: "persona@example.com" },
 function render(element, auth = guest) {
   return renderToStaticMarkup(<AuthContext.Provider value={auth}>{element}</AuthContext.Provider>);
 }
+assert.equal(render(<PayPalProvider><span>Portal disponible sin sesión</span></PayPalProvider>), '<span>Portal disponible sin sesión</span>');
 assert.equal(resolveRoute("#/publicar").path, "/publicar");
 assert.equal(resolveRoute('#/tecnologia').path, '/tecnologia');
 const technology = render(<TechnologyView/>);

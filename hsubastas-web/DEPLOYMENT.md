@@ -91,6 +91,14 @@ service_role. No publicar esta función como una API de pago anónima.
 
 El SDK oficial se carga mediante `@paypal/react-paypal-js` (exportación estable
 PayPalScriptProvider/PayPalButtons, SDK JS v5 soportado por el paquete). Se utiliza
+un PayPalProvider global: carga el script real desde el inicio del portal, incluso
+sin sesión, cuando VITE_PAYPAL_CLIENT_ID está configurado. El checkout reutiliza
+esa instancia. Esto permite que detectores como Wappalyzer observen la integración
+en la página inicial, aunque el resultado depende de la extensión, caché y bloqueadores.
+Para verificar la carga, abrir Network y buscar la petición a paypal.com/sdk/js y
+su respuesta correcta. Los botones de pago permanecen exclusivos del comprador
+en una adjudicación autorizada; la carga del SDK no inicia ni captura un pago.
+Se utiliza
 el botón oficial azul; PayPal decide los métodos/tarjetas elegibles. Visa, Mastercard
 y Amex son referencias visuales, no una garantía de aceptación para toda cuenta.
 Las credenciales bancarias se introducen en PayPal. La leyenda HTTPS/TLS describe
